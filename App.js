@@ -1,10 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, TextInput } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 
 export default function App() {
   const [primeiroNome, setPrimeiroNome] = useState();
   const [sobrenome, setSobrenome] = useState();
+  const [escondeSobrenome, setEscondeSobrenome] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+
+    setTimeout(() => {
+      console.log("funcinou");
+      setLoading(false);
+    }, 3000);
+  }, []);
+
+  function stopLoading() {
+    setLoading(!loading);
+  }
+
+  function mostrarAlert() {
+    const nomeCompleto = primeiroNome + " " + sobrenome;
+
+    Alert.alert("Nome completo", nomeCompleto);
+  }
+
+  function ocultaSobrenome() {
+    setEscondeSobrenome(!escondeSobrenome);
+  }
 
   return (
     <View style={styles.container}>
@@ -21,9 +54,13 @@ export default function App() {
         style={styles.estiloCampoTexto}
       />
       <Text style={styles.estiloTexto}>Primeiro nome: {primeiroNome}</Text>
-      <Text style={[styles.estiloTexto, { color: "black" }]}>
-        Sobrenome: {sobrenome}
-      </Text>
+      {escondeSobrenome ? (
+        <></>
+      ) : (
+        <Text style={[styles.estiloTexto]}>Sobrenome: {sobrenome}</Text>
+      )}
+      <Button title="Executar" onPress={() => stopLoading()} />
+      <ActivityIndicator animating={loading} size={"large"} color={"red"} />
       <StatusBar style="auto" />
     </View>
   );
